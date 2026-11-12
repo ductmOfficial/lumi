@@ -3,3 +3,9 @@ packages:
   - "packages/*"
 
 engineStrict: true
+
+# pnpm blocks dependency build scripts unless listed here. The postinstall scripts of esbuild
+# and workerd only verify their binaries, which pnpm already installs as platform packages.
+allowBuilds:
+  esbuild: false
+  workerd: false
