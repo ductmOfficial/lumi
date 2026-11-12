@@ -1,3 +1,4 @@
+import { Button } from "@ductmofficial/sen-ui";
 import type { SubmitEvent } from "react";
 import { useSearchInput } from "@/features/search/useSearchInput";
 import { Link, NavLink, useLocation } from "react-router";
@@ -41,6 +42,10 @@ function HeaderSearch() {
   );
 }
 
+/** Round icon button in the header bar, on Sen UI's Button. */
+export const ICON_BUTTON =
+  "min-h-0 gap-1 rounded-full border-0 bg-transparent p-2 font-normal text-muted hover:bg-surface-2 hover:text-fg";
+
 /** Quick light/dark toggle (more options in Settings). */
 function ThemeToggle() {
   const t = useT();
@@ -49,17 +54,17 @@ function ThemeToggle() {
   // toggle light/dark while keeping the theme family (e.g. Liquid Glass light ⇄ dark)
   const next = oppositeTheme(resolved);
   return (
-    <button
-      type="button"
+    <Button
+      variant="secondary"
       onClick={() => {
         setTheme(next);
       }}
       aria-label={t("settings.theme")}
       title={t("settings.theme")}
-      className="rounded-full p-2 text-muted hover:bg-surface-2 hover:text-fg"
+      className={ICON_BUTTON}
     >
       {resolved.scheme === "dark" ? <SunIcon size={20} /> : <MoonIcon size={20} />}
-    </button>
+    </Button>
   );
 }
 

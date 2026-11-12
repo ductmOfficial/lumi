@@ -7,18 +7,32 @@
  */
 [data-theme="glass-light"] {
   color-scheme: light;
-  --bg: #eef1f7;
-  --surface: rgb(255 255 255 / 0.55);
-  --surface-2: rgb(13 22 38 / 0.06);
-  --border: rgb(13 22 38 / 0.1);
-  --fg: #0d1626;
-  --muted: #4a5468;
-  --accent: #0066d6;
-  --accent-fg: #ffffff;
+  /* Sen UI tokens hold the palette; the short role names below alias them. */
+  --sen-color-bg: #eef1f7;
+  --sen-color-surface: rgb(255 255 255 / 0.55);
+  --sen-color-surface-hover: rgb(13 22 38 / 0.06);
+  --sen-color-border-subtle: rgb(13 22 38 / 0.1);
+  --sen-color-fg: #0d1626;
+  --sen-color-fg-muted: #4a5468;
+  --sen-color-accent: #0066d6;
+  --sen-color-on-accent: #ffffff;
+  --sen-color-danger: #d4261f;
+  --sen-color-border: var(--sen-color-border-subtle);
+  --sen-color-accent-hover: color-mix(in srgb, var(--sen-color-accent) 90%, var(--sen-color-bg));
+  --sen-color-accent-text: var(--sen-color-accent);
+  --sen-focus-ring-color: var(--sen-color-accent);
+  --bg: var(--sen-color-bg);
+  --surface: var(--sen-color-surface);
+  --surface-2: var(--sen-color-surface-hover);
+  --border: var(--sen-color-border-subtle);
+  --fg: var(--sen-color-fg);
+  --muted: var(--sen-color-fg-muted);
+  --accent: var(--sen-color-accent);
+  --accent-fg: var(--sen-color-on-accent);
   --accent-2: #1f8a5b;
   --success: #15803d;
   --warning: #b45309;
-  --danger: #d4261f;
+  --danger: var(--sen-color-danger);
   --shadow: 0 12px 32px -12px rgb(30 40 90 / 0.25);
   --viz-1: #2a78d6;
   --viz-2: #eb6834;
@@ -44,18 +58,32 @@
 
 [data-theme="glass-dark"] {
   color-scheme: dark;
-  --bg: #080b16;
-  --surface: rgb(255 255 255 / 0.07);
-  --surface-2: rgb(255 255 255 / 0.08);
-  --border: rgb(255 255 255 / 0.12);
-  --fg: #eef1f6;
-  --muted: #a3acbe;
-  --accent: #4aa3ff;
-  --accent-fg: #04101f;
+  /* Sen UI tokens hold the palette; the short role names below alias them. */
+  --sen-color-bg: #080b16;
+  --sen-color-surface: rgb(255 255 255 / 0.07);
+  --sen-color-surface-hover: rgb(255 255 255 / 0.08);
+  --sen-color-border-subtle: rgb(255 255 255 / 0.12);
+  --sen-color-fg: #eef1f6;
+  --sen-color-fg-muted: #a3acbe;
+  --sen-color-accent: #4aa3ff;
+  --sen-color-on-accent: #04101f;
+  --sen-color-danger: #ff7b72;
+  --sen-color-border: var(--sen-color-border-subtle);
+  --sen-color-accent-hover: color-mix(in srgb, var(--sen-color-accent) 90%, var(--sen-color-bg));
+  --sen-color-accent-text: var(--sen-color-accent);
+  --sen-focus-ring-color: var(--sen-color-accent);
+  --bg: var(--sen-color-bg);
+  --surface: var(--sen-color-surface);
+  --surface-2: var(--sen-color-surface-hover);
+  --border: var(--sen-color-border-subtle);
+  --fg: var(--sen-color-fg);
+  --muted: var(--sen-color-fg-muted);
+  --accent: var(--sen-color-accent);
+  --accent-fg: var(--sen-color-on-accent);
   --accent-2: #8fd6a8;
   --success: #8fd6a8;
   --warning: #fcd34d;
-  --danger: #ff7b72;
+  --danger: var(--sen-color-danger);
   --shadow: 0 16px 40px -14px rgb(0 0 0 / 0.7);
   --viz-1: #3987e5;
   --viz-2: #d95926;
@@ -223,11 +251,23 @@
 /* reduced transparency preference → solid surfaces, no blur */
 @media (prefers-reduced-transparency: reduce) {
   [data-theme="glass-light"] {
-    --surface: #ffffff;
+    /* Sen UI tokens hold the palette; the short role names below alias them. */
+    --sen-color-surface: #ffffff;
+    --sen-color-border: var(--sen-color-border-subtle);
+    --sen-color-accent-hover: color-mix(in srgb, var(--sen-color-accent) 90%, var(--sen-color-bg));
+    --sen-color-accent-text: var(--sen-color-accent);
+    --sen-focus-ring-color: var(--sen-color-accent);
+    --surface: var(--sen-color-surface);
     --glass-bar: #ffffff;
   }
   [data-theme="glass-dark"] {
-    --surface: #161b2c;
+    /* Sen UI tokens hold the palette; the short role names below alias them. */
+    --sen-color-surface: #161b2c;
+    --sen-color-border: var(--sen-color-border-subtle);
+    --sen-color-accent-hover: color-mix(in srgb, var(--sen-color-accent) 90%, var(--sen-color-bg));
+    --sen-color-accent-text: var(--sen-color-accent);
+    --sen-focus-ring-color: var(--sen-color-accent);
+    --surface: var(--sen-color-surface);
     --glass-bar: #0c1020;
   }
   [data-theme^="glass"] :is(.bg-surface, .bg-surface\/80)::before,

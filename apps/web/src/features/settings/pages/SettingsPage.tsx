@@ -1,5 +1,7 @@
 import { useWatchProviders } from "@/features/discover/api/queries";
+import { Select, SelectItem, Button } from "@ductmofficial/sen-ui";
 import type { ReactNode } from "react";
+import { ConfirmButton } from "@/components/ConfirmButton";
 import { Link, useNavigate } from "react-router";
 import clsx from "clsx";
 import { PageMeta } from "@/components/PageMeta";
@@ -26,6 +28,11 @@ import {
 } from "@/themes/registry";
 import { usePersonalization } from "@/features/personalization/store";
 import { useLibrary } from "@/features/library/store";
+
+/** Settings selects: full width on phones, a fixed width from sm. */
+const SELECT = "pt-2 sm:max-w-md";
+/** Select key for "no streaming service" (TMDB provider ids are positive). */
+const NO_SERVICE = 0;
 
 const REGIONS = ["VN", "US", "GB", "JP", "KR", "FR", "DE", "SG", "TH", "AU"];
 
@@ -126,32 +133,23 @@ function StreamingServicePicker() {
   const service = usePreferences((s) => s.streamingService);
   const setService = usePreferences((s) => s.setStreamingService);
   const providers = useWatchProviders("movie");
-  const options = providers.data ?? [];
+  const options = (providers.data ?? []).map((p) => ({ id: p.provider_id, name: p.provider_name }));
   // keep the saved service listed even when it is not offered in the current region
-  const listed = service && !options.some((p) => p.provider_id === service.id);
+  if (service && !options.some((p) => p.id === service.id)) options.unshift(service);
 
   return (
-    <label className="block space-y-1.5 pt-2">
-      <span className="text-sm text-muted">{t("settings.streaming")}</span>
-      <select
-        value={service?.id ?? ""}
-        onChange={(e) => {
-          const id = Number(e.target.value);
-          const picked = options.find((p) => p.provider_id === id);
-          setService(picked ? { id, name: picked.provider_name } : null);
-        }}
-        className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm sm:w-60"
-      >
-        <option value="">{t("settings.streamingNone")}</option>
-        {listed && <option value={service.id}>{service.name}</option>}
-        {options.map((p) => (
-          <option key={p.provider_id} value={p.provider_id}>
-            {p.provider_name}
-          </option>
-        ))}
-      </select>
-      <span className="block text-xs text-muted">{t("settings.streamingHint")}</span>
-    </label>
+    <Select
+      label={t("settings.streaming")}
+      description={t("settings.streamingHint")}
+      value={service?.id ?? NO_SERVICE}
+      onChange={(key) => {
+        setService(options.find((p) => p.id === key) ?? null);
+      }}
+      items={[{ id: NO_SERVICE, name: t("settings.streamingNone") }, ...options]}
+      className={SELECT}
+    >
+      {(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}
+    </Select>
   );
 }
 
@@ -229,40 +227,36 @@ export function SettingsPage() {
       <Section title={t("settings.language")}>
         <div className="flex gap-2">
           {(["vi", "en"] as Locale[]).map((l) => (
-            <button
-              type="button"
+            <Button
               key={l}
+              variant={locale === l ? "primary" : "secondary"}
               aria-pressed={locale === l}
               onClick={() => {
                 setLocale(l);
               }}
               className={clsx(
-                "rounded-lg border px-4 py-2 text-sm font-medium",
-                locale === l
-                  ? "border-accent bg-accent text-accent-fg"
-                  : "border-border hover:border-fg",
+                "min-h-0 px-4 py-2 text-sm font-medium",
+                locale !== l && "bg-transparent hover:border-fg",
               )}
             >
               {l === "vi" ? "Tiếng Việt" : "English"}
-            </button>
+            </Button>
           ))}
         </div>
-        <label className="block space-y-1.5 pt-2">
-          <span className="text-sm text-muted">{t("settings.region")}</span>
-          <select
-            value={region}
-            onChange={(e) => {
-              setRegion(e.target.value);
-            }}
-            className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm sm:w-60"
-          >
-            {REGIONS.map((r) => (
-              <option key={r} value={r}>
-                {new Intl.DisplayNames([locale], { type: "region" }).of(r)} ({r})
-              </option>
-            ))}
-          </select>
-        </label>
+        <Select
+          label={t("settings.region")}
+          value={region}
+          onChange={(key) => {
+            if (typeof key === "string") setRegion(key);
+          }}
+          className={SELECT}
+        >
+          {REGIONS.map((r) => (
+            <SelectItem key={r} id={r}>
+              {`${new Intl.DisplayNames([locale], { type: "region" }).of(r) ?? r} (${r})`}
+            </SelectItem>
+          ))}
+        </Select>
         <StreamingServicePicker />
       </Section>
 
@@ -349,22 +343,23 @@ export function SettingsPage() {
             description={t("settings.p.deleteAllDesc")}
             danger
           >
-            <button
-              type="button"
-              onClick={() => {
-                if (window.confirm(t("settings.resetConfirm"))) {
-                  resetAll();
-                  useLibrary.getState().reset();
-                  toast(t("settings.resetDone"));
-                }
+            <ConfirmButton
+              title={t("settings.p.deleteAll")}
+              message={t("settings.resetConfirm")}
+              confirmLabel={t("settings.p.delete")}
+              onConfirm={() => {
+                resetAll();
+                useLibrary.getState().reset();
+                toast(t("settings.resetDone"));
               }}
               className={clsx(
                 BTN,
+                "min-h-0 bg-transparent font-normal",
                 "border-danger/50 text-danger hover:border-danger hover:bg-danger/10",
               )}
             >
               <TrashIcon size={15} /> {t("settings.p.delete")}
-            </button>
+            </ConfirmButton>
           </SettingRow>
         </ul>
       </Section>
