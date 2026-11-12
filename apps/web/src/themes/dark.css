@@ -1,0 +1,21 @@
+/* Theme: Dark (default) */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0f17;
+  --surface: #141a26;
+  --surface-2: #1c2433;
+  --border: #263042;
+  --fg: #e6e9ef;
+  --muted: #8b95a7;
+  --accent: #01b4e4;
+  --accent-fg: #06121c;
+  --accent-2: #90cea1;
+  --success: #90cea1;
+  --warning: #fcd34d;
+  --danger: #f87171;
+  --shadow: 0 10px 30px -10px rgb(0 0 0 / 0.6);
+  /* charts: 2 categorical colors (checked for CVD and contrast on a dark background) */
+  --viz-1: #3987e5;
+  --viz-2: #d95926;
+}

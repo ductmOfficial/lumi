@@ -1,0 +1,113 @@
+@import "tailwindcss";
+@import "./themes/dark.css";
+@import "./themes/light.css";
+@import "./themes/glass.css";
+
+/* dark: variant follows the active theme's scheme (not the OS) */
+@custom-variant dark (&:where([data-scheme='dark'], [data-scheme='dark'] *));
+
+/* Semantic tokens → Tailwind utilities (bg-bg, text-fg, border-border, ...). Values change per theme. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-2: var(--accent-2);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-viz-1: var(--viz-1);
+  --color-viz-2: var(--viz-2);
+  --shadow-card: var(--shadow);
+}
+
+@theme {
+  /* Max width: list/feed pages are wider so large screens show more titles; profile pages are narrower for readability */
+  --container-app: 100rem; /* 1600px */
+  --container-profile: 80rem; /* 1280px */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --animate-sheet-up: sheet-up 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-eq: eq 0.9s ease-in-out infinite;
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    transition:
+      background-color 200ms,
+      color 200ms;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+  /* No blue tap highlight on iOS */
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Touch devices: hide scrollbars. With a mouse: show a thin bar on hover so it can still be dragged. */
+@utility scrollbar-none {
+  @media (pointer: coarse) {
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  @media (pointer: fine) {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    &:hover {
+      scrollbar-color: color-mix(in oklab, var(--muted) 55%, transparent) transparent;
+    }
+  }
+}
+
+/* Space for the bottom tab bar on mobile + iPhone safe area */
+@utility pb-tabbar {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* mini player slides up */
+@keyframes mini-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+/* "now playing" icon (equalizer) */
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
