@@ -224,11 +224,15 @@ export function HeroCarousel({ candidates }: { candidates: MovieSummary[] | unde
                 onClick={() => {
                   setIndex(i);
                 }}
-                className={clsx(
-                  "h-1.5 rounded-full transition-all",
-                  i === index ? "w-6 bg-white" : "w-1.5 bg-white/45 hover:bg-white/75",
-                )}
-              />
+                className="group grid h-6 min-w-6 place-items-center"
+              >
+                <span
+                  className={clsx(
+                    "h-1.5 rounded-full transition-all",
+                    i === index ? "w-6 bg-white" : "w-1.5 bg-white/45 group-hover:bg-white/75",
+                  )}
+                />
+              </button>
             ))}
           </div>
         )}

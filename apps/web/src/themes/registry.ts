@@ -34,7 +34,7 @@ export const THEMES = [
     scheme: "light",
     family: "classic",
     themeColor: "#f5f6f8",
-    preview: { bg: "#f5f6f8", surface: "#ffffff", fg: "#0d1626", accent: "#0279b8" },
+    preview: { bg: "#f5f6f8", surface: "#ffffff", fg: "#0d1626", accent: "#026fa8" },
   },
   {
     id: "glass-light",

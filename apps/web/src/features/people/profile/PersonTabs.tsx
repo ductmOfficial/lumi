@@ -150,13 +150,14 @@ function PersonIntro() {
       {photos.length > 1 && (
         <ProfileCard title={t("profile.tab.photos")} seeAllTo="photos" className="hidden lg:block">
           <div className="grid grid-cols-3 gap-1 overflow-hidden rounded-lg">
-            {photos.map((p) => (
+            {photos.map((p, i) => (
               <button
                 type="button"
                 key={p.file_path}
                 onClick={() => {
                   openPhoto(p.file_path);
                 }}
+                aria-label={`${t("media.viewPhoto")} ${i + 1}`}
                 className="aspect-square overflow-hidden bg-surface-2"
               >
                 <img

@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useT } from "@/i18n/useT";
 import { tmdbImage } from "@/lib/tmdb";
 
 type Variant = "backdrops" | "posters" | "logos";
@@ -76,6 +77,7 @@ const LOGO_BG = [
 ];
 
 export function PhotoCollage({ paths, total, onOpen, variant = "backdrops" }: Props) {
+  const t = useT();
   const table = LAYOUTS[variant];
   const maxKey = Math.max(...Object.keys(table).map(Number));
   const shown = paths.slice(0, maxKey);
@@ -106,6 +108,7 @@ export function PhotoCollage({ paths, total, onOpen, variant = "backdrops" }: Pr
             onClick={() => {
               onOpen(i);
             }}
+            aria-label={`${t("media.viewPhoto")} ${i + 1}`}
             className={clsx(
               "group/tile relative overflow-hidden",
               variant === "logos"
@@ -160,6 +163,7 @@ interface MixedProps {
  * - only backdrops / only posters → the count-based layout for that type
  */
 export function MixedPhotoCollage({ backdrops, posters, total, onOpen }: MixedProps) {
+  const t = useT();
   if (backdrops.length === 0 || posters.length < 2) {
     const variant: Variant = backdrops.length ? "backdrops" : "posters";
     const paths = backdrops.length ? backdrops : posters;
@@ -191,6 +195,7 @@ export function MixedPhotoCollage({ backdrops, posters, total, onOpen }: MixedPr
       onClick={() => {
         onOpen(p);
       }}
+      aria-label={`${t("media.viewPhoto")} ${[...top, ...bottom].indexOf(p) + 1}`}
       className={clsx("group/tile relative overflow-hidden bg-surface-2", className)}
     >
       <img

@@ -7,11 +7,11 @@
   --border: #d9dee6;
   --fg: #0d1626;
   --muted: #5b6578;
-  --accent: #0279b8;
+  --accent: #026fa8;
   --accent-fg: #ffffff;
   --accent-2: #2f8f5f;
-  --success: #15803d;
-  --warning: #b45309;
+  --success: #15703a;
+  --warning: #a14a07;
   --danger: #dc2626;
   --shadow: 0 10px 30px -12px rgb(13 22 38 / 0.25);
   /* charts: 2 categorical colors (checked for CVD and contrast on a light background) */
