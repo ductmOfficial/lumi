@@ -83,6 +83,7 @@ function RatingSummary({ movie }: { movie: MovieDetail }) {
         <div className="text-xs">
           <p
             className="flex gap-0.5 text-warning"
+            role="img"
             aria-label={`${movie.vote_average.toFixed(1)} / 10`}
           >
             {Array.from({ length: 5 }, (_, i) => (
@@ -146,6 +147,7 @@ function renderPost(
                 onClick={() => {
                   ctx.openMedia(`img-${post.image}`);
                 }}
+                aria-label={t("media.viewPhoto")}
                 className="block aspect-video w-full overflow-hidden bg-surface-2"
               >
                 <img

@@ -22,7 +22,7 @@ export function NotFoundPage() {
   return (
     <div className="mx-auto max-w-xl space-y-4 px-4 py-20 text-center">
       <p className="text-5xl font-black text-muted">404</p>
-      <p className="text-lg">{t("common.notFound")}</p>
+      <h1 className="text-lg font-normal">{t("common.notFound")}</h1>
       <Link to="/" className="inline-block text-accent hover:underline">
         ← {t("common.backHome")}
       </Link>

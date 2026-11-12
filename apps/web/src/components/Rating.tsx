@@ -15,6 +15,7 @@ export function Rating({ value, className }: { value: number; className?: string
         color,
         className,
       )}
+      role="img"
       aria-label={`${value.toFixed(1)} / 10`}
     >
       {pct ? `${pct}%` : "NR"}

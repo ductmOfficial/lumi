@@ -415,11 +415,15 @@ export function SpotlightRow({
                       }}
                       aria-label={t("spotlight.page", { n: i + 1 })}
                       aria-current={i === page ? "page" : undefined}
-                      className={clsx(
-                        "h-1.5 rounded-full transition-all",
-                        i === page ? "w-5 bg-accent" : "w-1.5 bg-border hover:bg-muted",
-                      )}
-                    />
+                      className="group grid h-6 min-w-6 place-items-center"
+                    >
+                      <span
+                        className={clsx(
+                          "h-1.5 rounded-full transition-all",
+                          i === page ? "w-5 bg-accent" : "w-1.5 bg-border group-hover:bg-muted",
+                        )}
+                      />
+                    </button>
                   ))}
                   <span className="ml-1 text-xs tabular-nums text-muted">
                     {page + 1}/{pageCount}
