@@ -1,4 +1,6 @@
+import { Button } from "@ductmofficial/sen-ui";
 import clsx from "clsx";
+import { ICON_BUTTON } from "@/app/layout/Header";
 import { useT } from "@/i18n/useT";
 import { usePreferences, type Locale } from "@/stores/preferences";
 import { GlobeIcon } from "./icons";
@@ -11,18 +13,18 @@ export function LanguageToggle() {
   const locale = usePreferences((s) => s.locale);
   const setLocale = usePreferences((s) => s.setLocale);
   return (
-    <button
-      type="button"
+    <Button
+      variant="secondary"
       onClick={() => {
         setLocale(locale === "vi" ? "en" : "vi");
       }}
       aria-label={`${t("lang.switch")}: ${LABEL[locale]}. ${t("lang.switchTo")}`}
       title={t("lang.switchTo")}
-      className="inline-flex items-center gap-1 rounded-full p-2 text-muted hover:bg-surface-2 hover:text-fg"
+      className={ICON_BUTTON}
     >
       <GlobeIcon size={20} />
       <span className="text-xs font-bold uppercase">{locale}</span>
-    </button>
+    </Button>
   );
 }
 

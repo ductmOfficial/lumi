@@ -1,4 +1,9 @@
+/* Sen UI sits above Tailwind's base styles and below its utilities, so a utility class on a
+   Sen UI component still wins. Declared first: the first statement fixes the layer order. */
+@layer theme, base, sen, components, utilities;
+
 @import "tailwindcss";
+@import "@ductmofficial/sen-ui/styles.css";
 @import "./themes/dark.css";
 @import "./themes/light.css";
 @import "./themes/glass.css";
@@ -23,6 +28,14 @@
   --color-viz-1: var(--viz-1);
   --color-viz-2: var(--viz-2);
   --shadow-card: var(--shadow);
+}
+
+/* Shape and type shared with the Sen UI components (unlayered, so it overrides the sen layer). */
+:root {
+  --sen-font-family:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sen-radius-md: 0.5rem;
+  --sen-radius-lg: 1rem;
 }
 
 @theme {

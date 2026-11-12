@@ -1,3 +1,4 @@
+import { ConfirmButton } from "@/components/ConfirmButton";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { ArrowDown, ArrowUp, Check, ChevronLeft, Pencil, Share2, Trash2, X } from "lucide-react";
@@ -119,18 +120,18 @@ export function ListPage() {
         >
           <Share2 size={16} /> {t("lib.shareList")}
         </button>
-        <button
-          type="button"
-          onClick={() => {
-            if (window.confirm(t("lib.deleteListConfirm", { name: list.name }))) {
-              remove(list.id);
-              void navigate("/watchlist?tab=lists", { replace: true });
-            }
+        <ConfirmButton
+          title={t("lib.deleteList")}
+          message={t("lib.deleteListConfirm", { name: list.name })}
+          confirmLabel={t("lib.deleteList")}
+          onConfirm={() => {
+            remove(list.id);
+            void navigate("/watchlist?tab=lists", { replace: true });
           }}
-          className="inline-flex items-center gap-2 rounded-lg border border-danger/50 px-4 py-2 text-sm font-semibold text-danger hover:bg-danger/10"
+          className="min-h-0 gap-2 rounded-lg border-danger/50 bg-transparent px-4 py-2 text-sm font-semibold text-danger hover:bg-danger/10"
         >
           <Trash2 size={16} /> {t("lib.deleteList")}
-        </button>
+        </ConfirmButton>
       </div>
       {list.items.length === 0 ? (
         <EmptyState

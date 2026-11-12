@@ -1,18 +1,32 @@
 /* Theme: Light */
 [data-theme="light"] {
   color-scheme: light;
-  --bg: #f5f6f8;
-  --surface: #ffffff;
-  --surface-2: #eceff3;
-  --border: #d9dee6;
-  --fg: #0d1626;
-  --muted: #5b6578;
-  --accent: #026fa8;
-  --accent-fg: #ffffff;
+  /* Sen UI tokens hold the palette; the short role names below alias them. */
+  --sen-color-bg: #f5f6f8;
+  --sen-color-surface: #ffffff;
+  --sen-color-surface-hover: #eceff3;
+  --sen-color-border-subtle: #d9dee6;
+  --sen-color-fg: #0d1626;
+  --sen-color-fg-muted: #5b6578;
+  --sen-color-accent: #026fa8;
+  --sen-color-on-accent: #ffffff;
+  --sen-color-danger: #dc2626;
+  --sen-color-border: var(--sen-color-border-subtle);
+  --sen-color-accent-hover: color-mix(in srgb, var(--sen-color-accent) 90%, var(--sen-color-bg));
+  --sen-color-accent-text: var(--sen-color-accent);
+  --sen-focus-ring-color: var(--sen-color-accent);
+  --bg: var(--sen-color-bg);
+  --surface: var(--sen-color-surface);
+  --surface-2: var(--sen-color-surface-hover);
+  --border: var(--sen-color-border-subtle);
+  --fg: var(--sen-color-fg);
+  --muted: var(--sen-color-fg-muted);
+  --accent: var(--sen-color-accent);
+  --accent-fg: var(--sen-color-on-accent);
   --accent-2: #2f8f5f;
   --success: #15703a;
   --warning: #a14a07;
-  --danger: #dc2626;
+  --danger: var(--sen-color-danger);
   --shadow: 0 10px 30px -12px rgb(13 22 38 / 0.25);
   /* charts: 2 categorical colors (checked for CVD and contrast on a light background) */
   --viz-1: #2a78d6;

@@ -45,3 +45,22 @@ for (const path of pages) {
     });
   });
 }
+
+test.describe("confirmation dialog", () => {
+  for (const scheme of ["dark", "light"] as const) {
+    test(`has no WCAG 2.2 AA violations (${scheme})`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme, reducedMotion: "reduce" });
+      await page.goto("/settings");
+      await page.getByRole("button", { name: "Xoá tất cả" }).click();
+      await expect(page.getByRole("alertdialog")).toBeVisible();
+      const { violations } = await new AxeBuilder({ page })
+        .include('[role="alertdialog"]')
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+        .analyze();
+      expect(
+        violations,
+        violations.map((v) => `${v.id}: ${v.help} (${String(v.nodes.length)})`).join("\n"),
+      ).toEqual([]);
+    });
+  }
+});

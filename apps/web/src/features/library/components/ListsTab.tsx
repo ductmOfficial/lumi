@@ -1,3 +1,4 @@
+import { Button, TextField } from "@ductmofficial/sen-ui";
 import { useState, type SubmitEvent } from "react";
 import { Link } from "react-router";
 import { ListPlus, Plus } from "lucide-react";
@@ -23,23 +24,23 @@ export function ListsTab() {
   return (
     <div className="space-y-4">
       <form onSubmit={onCreate} className="flex max-w-md gap-2">
-        <input
+        <TextField
+          label={<span className="sr-only">{t("lib.newList")}</span>}
           value={name}
           onChange={(e) => {
             setName(e.target.value);
           }}
           placeholder={t("lib.newListPlaceholder")}
-          aria-label={t("lib.newList")}
           maxLength={60}
-          className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm focus:border-accent focus:outline-none"
+          className="min-w-0 flex-1 gap-0 [&_input]:min-h-0 [&_input]:bg-surface [&_input]:px-3 [&_input]:py-2 [&_input]:text-sm"
         />
-        <button
+        <Button
           type="submit"
           disabled={!name.trim()}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-fg disabled:opacity-40"
+          className="min-h-0 gap-1.5 px-4 py-2 text-sm disabled:opacity-40"
         >
           <Plus size={16} /> {t("lib.createList")}
-        </button>
+        </Button>
       </form>
       {lists.length === 0 ? (
         <EmptyState
