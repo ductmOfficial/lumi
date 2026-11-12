@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { ChevronLeft, Ellipsis, ListPlus, Share2 } from "lucide-react";
+import { Link } from "react-router";
+import { ChevronLeft, Ellipsis, ListPlus, Scale, Share2 } from "lucide-react";
+import { mediaKey } from "@/lib/slug";
 import { useT } from "@/i18n/useT";
 import { toast } from "@/stores/toast";
 import { Popover } from "@/components/Popover";
@@ -64,6 +66,9 @@ export function MoreActions({ movie }: { movie: MovieLite }) {
             >
               <ListPlus size={17} className="text-accent" /> {t("lib.addToMyList")}…
             </button>
+            <Link to={`/compare?a=${mediaKey(movie)}`} onClick={close} className={item}>
+              <Scale size={17} className="text-accent" /> {t("lib.compareWith")}
+            </Link>
             <button
               type="button"
               onClick={() => {

@@ -1,10 +1,12 @@
 import { useWatchProviders } from "@/features/discover/api/queries";
 import type { ReactNode } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import clsx from "clsx";
 import { PageMeta } from "@/components/PageMeta";
 import { TmdbAttribution } from "@/components/TmdbAttribution";
 import {
+  ArrowRightIcon,
+  ChartIcon,
   CheckIcon,
   HistoryIcon,
   MonitorIcon,
@@ -269,6 +271,21 @@ export function SettingsPage() {
         description={t("settings.personalizationHint")}
       >
         <ul className="-mx-1 divide-y divide-border">
+          <SettingRow
+            icon={<ChartIcon size={20} />}
+            title={t("settings.p.insights")}
+            description={t("settings.p.insightsDesc")}
+          >
+            <Link
+              to="/insights"
+              className={clsx(
+                BTN,
+                "border-accent bg-accent font-semibold text-accent-fg hover:opacity-90",
+              )}
+            >
+              {t("settings.p.open")} <ArrowRightIcon size={16} />
+            </Link>
+          </SettingRow>
           <SettingRow
             icon={<HistoryIcon size={20} />}
             tone="blue"
