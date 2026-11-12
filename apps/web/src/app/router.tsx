@@ -179,6 +179,28 @@ export const router = createBrowserRouter([
             }),
           },
           {
+            path: "play",
+            lazy: async () => ({ Component: (await import("@/features/play/PlayPage")).PlayPage }),
+          },
+          {
+            path: "compare",
+            lazy: async () => ({
+              Component: (await import("@/features/compare/ComparePage")).ComparePage,
+            }),
+          },
+          {
+            path: "together",
+            lazy: async () => ({
+              Component: (await import("@/features/together/TogetherPage")).TogetherPage,
+            }),
+          },
+          {
+            path: "insights",
+            lazy: async () => ({
+              Component: (await import("@/features/insights/pages/InsightsPage")).InsightsPage,
+            }),
+          },
+          {
             path: "settings",
             lazy: async () => ({
               Component: (await import("@/features/settings/pages/SettingsPage")).SettingsPage,

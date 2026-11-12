@@ -25,7 +25,10 @@ import {
   CircleCheckBig,
   Clapperboard,
   Dices,
+  Gamepad2,
   Gem,
+  Scale,
+  UsersRound,
   Flower2,
   Heart,
   Mountain,
@@ -168,6 +171,55 @@ function TileIcon({ icon: Icon, size = "md" }: { icon: LucideIcon; size?: "md" |
         <Icon className={size === "lg" ? "size-5" : "size-4"} strokeWidth={2} />
       </span>
     </>
+  );
+}
+
+/** Entry points to the interactive features: mini-game, group picker, compare */
+function ToolTiles() {
+  const t = useT();
+  const tools: {
+    to: string;
+    icon: LucideIcon;
+    title: MessageKey;
+    hint: MessageKey;
+    tone: keyof typeof HIGHLIGHT_TONES;
+  }[] = [
+    { to: "/play", icon: Gamepad2, title: "tools.play", hint: "tools.playHint", tone: "ocean" },
+    {
+      to: "/together",
+      icon: UsersRound,
+      title: "tools.together",
+      hint: "tools.togetherHint",
+      tone: "berry",
+    },
+    {
+      to: "/compare",
+      icon: Scale,
+      title: "tools.compare",
+      hint: "tools.compareHint",
+      tone: "forest",
+    },
+  ];
+  return (
+    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
+      {tools.map((x) => (
+        <li key={x.to}>
+          <Link
+            to={x.to}
+            className={clsx(
+              "relative flex h-24 flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br p-3.5 text-white shadow-card transition hover:-translate-y-0.5 hover:brightness-110 sm:h-28",
+              HIGHLIGHT_TONES[x.tone],
+            )}
+          >
+            <TileIcon icon={x.icon} size="lg" />
+            <span className="relative text-base font-extrabold leading-tight drop-shadow">
+              {t(x.title)}
+            </span>
+            <span className="relative text-xs text-white/85">{t(x.hint)}</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -548,6 +600,10 @@ export function DiscoverHubPage() {
       </header>
 
       <SurpriseMe media={media} />
+
+      <Section title={t("tools.title")}>
+        <ToolTiles />
+      </Section>
 
       {media === "tv" && shelves}
 
