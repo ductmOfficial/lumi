@@ -122,18 +122,23 @@ export function LiquidGlassFilters() {
       });
     };
     const ro = new ResizeObserver(measure);
-    const scan = () => {
+    // returns true when the set of bars changed
+    const track = () => {
       const found = [...document.querySelectorAll<HTMLElement>("[data-glass-bar]")];
-      if (found.length === els.length && found.every((el, i) => el === els[i])) return;
+      if (found.length === els.length && found.every((el, i) => el === els[i])) return false;
       ro.disconnect();
       els = found;
       els.forEach((el) => {
         ro.observe(el);
       });
-      measure();
+      return true;
     };
-    scan();
-    const mo = new MutationObserver(scan);
+    // the ResizeObserver reports every newly observed bar once, which takes the first measurement
+    track();
+    // measure here too, so the filters go away when every bar is gone (nothing left to report a size)
+    const mo = new MutationObserver(() => {
+      if (track()) measure();
+    });
     mo.observe(document.body, { childList: true, subtree: true });
     return () => {
       mo.disconnect();
