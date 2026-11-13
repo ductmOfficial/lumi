@@ -261,6 +261,11 @@ export default {
 
     // HTML routes (see run_worker_first) get server-side metadata; static files never reach the Worker
     if (request.method === "GET") return renderPage(request, env, ctx);
+    // HEAD gets the same status and headers as GET (Vary, Content-Type…), without the body
+    if (request.method === "HEAD") {
+      const page = await renderPage(new Request(request, { method: "GET" }), env, ctx);
+      return new Response(null, page);
+    }
     return env.ASSETS.fetch(request);
   },
 } satisfies ExportedHandler<Env>;

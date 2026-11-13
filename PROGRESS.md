@@ -1,6 +1,6 @@
 # Progress
 
-> Last updated: 2026-11-12
+> Last updated: 2026-11-13
 >
 > Legend: ✅ done · 🔄 in progress · ⬜ not started
 
@@ -20,7 +20,8 @@ Lumi is a movie and series discovery app on the TMDB API. This repo was created 
 | 8   | Playwright and axe tests on a fake TMDB, `Browser` job in CI, accessibility fixes | `test/e2e`          | ✅     |
 | 9   | Sen UI tokens and components                                                      | `feat/sen-ui`       | ✅     |
 | 10  | README and this progress log                                                      | `docs/readme`       | ✅     |
-| 11  | Deploy the Worker `lumi` with the `TMDB_TOKEN` secret                             | —                   | ⬜     |
+| 11  | Deploy the Worker `lumi` with the `TMDB_TOKEN` secret (lumi.tmduc.workers.dev)    | —                   | ✅     |
+| 12  | HEAD requests for pages get the same headers as GET                               | `fix/worker-head`   | ✅     |
 
 Each step is a pull request with green checks (`Browser` from step 8), merged with rebase.
 
@@ -50,3 +51,4 @@ Each step is a pull request with green checks (`Browser` from step 8), merged wi
 | pnpm 12 blocks the postinstall scripts of esbuild and workerd                                                                     | Both only verify binaries that pnpm already installs as platform packages, so `allowBuilds` sets them to `false`                    |
 | axe: dot pagers smaller than 24 px, unnamed photo buttons, `aria-label` on a `<p>`, light-theme contrast, no `h1` on the 404 page | Larger hit areas around the same dots, labels, `role="img"`, darker light-theme accent, success and warning colors, a heading       |
 | React Aria deprecated `selectedKey` on `Select`                                                                                   | `value` and `onChange`                                                                                                              |
+| `HEAD /` skipped the Worker and came back without `Vary: Accept-Language`                                                         | The Worker renders the page for HEAD as for GET and returns the headers without the body                                            |
