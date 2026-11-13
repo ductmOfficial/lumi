@@ -3,6 +3,9 @@
   "name": "lumi",
   "main": "src/index.ts",
   "compatibility_date": "2026-11-01",
+  // Served at lumi.<subdomain>.workers.dev; no per-version preview URLs.
+  "workers_dev": true,
+  "preview_urls": false,
   // The web app's build is served as static assets; unknown paths fall back to index.html.
   // The Worker runs first for the API, the SEO files and every HTML route (to add link-preview metadata).
   // Built files (JS, CSS, images) are excluded and served straight from the assets.
