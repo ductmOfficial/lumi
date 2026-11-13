@@ -24,6 +24,7 @@ Lumi is a movie and series discovery app on the TMDB API. This repo was created 
 | 12  | HEAD requests for pages get the same headers as GET                               | `fix/worker-head`     | ✅     |
 | 13  | Declare the workers.dev URL and turn off preview URLs                             | `chore/worker-urls`   | ✅     |
 | 14  | First visit in the browser's language, by the same rule as the Worker             | `feat/initial-locale` | ✅     |
+| 15  | Full setup, run, test, deploy and troubleshooting guide in the README             | `docs/setup`          | ✅     |
 
 Each step is a pull request with green checks (`Browser` from step 8), merged with rebase.
 
