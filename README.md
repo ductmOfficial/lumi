@@ -5,7 +5,7 @@
 
 A movie and series discovery app built on the TMDB API. Vietnamese and English, rule-based personalization (no AI or machine learning), and every bit of personal data stays in the browser.
 
-> Status: the web app and the Worker are complete; the Worker deploys to Cloudflare as `lumi`. See [PROGRESS.md](PROGRESS.md).
+> Live at [lumi.tmduc.workers.dev](https://lumi.tmduc.workers.dev). See [PROGRESS.md](PROGRESS.md).
 
 ## Features
 
@@ -45,33 +45,126 @@ A movie and series discovery app built on the TMDB API. Vietnamese and English, 
 
 Inside `apps/web/src`, each feature folder (`movies`, `tv`, `people`, `discover`, `search`, `personalization`, `library`, `play`, `compare`, `together`, `insights`, `settings`) keeps its pages, components, queries and pure logic together; the pure logic has unit tests next to it.
 
-## Requirements
+## Setup
 
-- Node.js 24 (`.nvmrc`)
-- pnpm 12 (pinned in `packageManager`)
-- A TMDB API Read Access Token for local development ([themoviedb.org/settings/api](https://www.themoviedb.org/settings/api))
+### 1. Prerequisites
 
-## Getting started
+| Tool                       | Version                    | Needed for                         | Install                                                                                            |
+| -------------------------- | -------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Node.js                    | 24 (`.nvmrc`)              | everything                         | `nvm install && nvm use` (or `fnm use`)                                                            |
+| pnpm                       | 12.14.0 (`packageManager`) | everything                         | `npm install -g pnpm@12.14.0` (or `corepack enable`)                                               |
+| Git                        | any recent                 | everything                         |                                                                                                    |
+| TMDB API Read Access Token | v4 token                   | running the app with real data     | Create a free account, then [themoviedb.org/settings/api](https://www.themoviedb.org/settings/api) |
+| Chromium or Google Chrome  | any recent                 | browser tests only                 | `pnpm --filter web exec playwright install chromium`, or point `CHROME_PATH` at Chrome             |
+| Cloudflare account         | free plan is enough        | running the Worker locally, deploy | [dash.cloudflare.com](https://dash.cloudflare.com/sign-up)                                         |
+
+`pnpm install` refuses other Node.js majors (`engineStrict`). The TMDB page shows two credentials: use the long **API Read Access Token** (it starts with `eyJ`), not the short API key.
+
+### 2. Clone and install
 
 ```bash
-pnpm install
-cp .env.example apps/web/.env      # set VITE_TMDB_ACCESS_TOKEN
-pnpm build                         # builds the shared packages first
-pnpm --filter web dev              # http://localhost:5173
+git clone https://github.com/ductmOfficial/lumi.git
+cd lumi
+pnpm install          # also installs the commit-msg hook
 ```
 
-The token is for local development only: in dev the app calls TMDB directly with it. Production builds never contain it (`vite.config.ts` strips it) and call the API through the Worker at `/api/tmdb`.
+### 3. Configure the token
 
-| Script                     | What it does                                                                       |
-| -------------------------- | ---------------------------------------------------------------------------------- |
-| `pnpm build`               | Build the packages and the app, and check the Worker bundle (`wrangler --dry-run`) |
-| `pnpm lint`                | ESLint everywhere; warnings fail the run                                           |
-| `pnpm typecheck`           | `tsc --noEmit` everywhere                                                          |
-| `pnpm test`                | Vitest everywhere                                                                  |
-| `pnpm --filter web e2e`    | Playwright and axe against the production build and a fake TMDB (after `build`)    |
-| `pnpm --filter worker dev` | The whole site through the Worker, locally (after `build`)                         |
+```bash
+cp .env.example apps/web/.env
+```
 
-`e2e` uses Playwright's Chromium (`pnpm --filter web exec playwright install chromium`), or the browser in `CHROME_PATH`. It needs no token: the tests answer every TMDB request with fictional titles and placeholder images.
+Then open `apps/web/.env` and set the token. The file is ignored by git.
+
+| Variable                 | Required | Default                              | What it does                                                                                 |
+| ------------------------ | -------- | ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `VITE_TMDB_ACCESS_TOKEN` | for dev  | —                                    | TMDB API Read Access Token. With it, the dev server calls TMDB directly                      |
+| `VITE_TMDB_API_BASE`     | no       | TMDB, or `/api/tmdb` without a token | Another API base, such as a deployed Worker: `https://lumi.<subdomain>.workers.dev/api/tmdb` |
+| `VITE_TMDB_IMAGE_BASE`   | no       | `https://image.tmdb.org/t/p`         | Image CDN                                                                                    |
+
+Without a token and without `VITE_TMDB_API_BASE`, the app calls `/api/tmdb` on its own origin, which only the Worker serves.
+
+### 4. Build the shared packages
+
+```bash
+pnpm build
+```
+
+The app and the Worker import `@lumi/tmdb-client` and `@lumi/i18n` from their build output, so run this once after cloning and again after changing a package. It also builds the app and checks the Worker bundle.
+
+## Running
+
+### Development server
+
+```bash
+pnpm --filter web dev
+```
+
+Open http://localhost:5173. The server listens on every interface (`--host`), so a phone on the same network can open the address it prints; copying to the clipboard falls back to an older API there, because a LAN address is not a secure context.
+
+### Production build, without the Worker
+
+```bash
+ALLOW_CLIENT_TOKEN=1 pnpm --filter web build
+pnpm --filter web preview      # http://localhost:4173
+```
+
+A normal production build strips the token and calls `/api/tmdb`, which `vite preview` does not serve. `ALLOW_CLIENT_TOKEN=1` keeps the token in the bundle for this local check only; never deploy a build made with it.
+
+### The whole site through the Worker
+
+This is how the site runs in production: the Worker serves the build, proxies TMDB with the token as a secret, and adds link-preview metadata.
+
+```bash
+echo "TMDB_TOKEN=<your API Read Access Token>" > apps/worker/.dev.vars   # ignored by git
+pnpm build
+pnpm --filter worker dev       # http://localhost:8787
+```
+
+Check it from another terminal:
+
+```bash
+curl -s http://localhost:8787/api/tmdb/genre/movie/list | head -c 120
+curl -s -H "Accept-Language: en" http://localhost:8787/movie/550 | grep -o '<meta property="og:title"[^>]*>'
+```
+
+Run `pnpm build` again after changing the app: the Worker serves `apps/web/dist`.
+
+## Testing
+
+| Command                                         | What it runs                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------------- |
+| `pnpm test`                                     | Vitest in every package (pure logic, the TMDB client, the Worker, the messages) |
+| `pnpm --filter @lumi/tmdb-client test:coverage` | The client's tests with the 90% coverage threshold                              |
+| `pnpm lint` / `pnpm typecheck`                  | ESLint (warnings fail) and `tsc --noEmit` everywhere                            |
+| `pnpm format:check` / `pnpm format`             | Prettier check / write                                                          |
+| `pnpm --filter web e2e`                         | Playwright flows and axe (WCAG 2.2 AA) on desktop and mobile, light and dark    |
+
+The browser tests need no token: they run against the production build (`pnpm build` first) and answer every TMDB request with fictional titles and placeholder images (`apps/web/e2e/fake-tmdb.ts`). They use Playwright's Chromium, or the browser in `CHROME_PATH`:
+
+```bash
+pnpm build
+CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" pnpm --filter web e2e
+pnpm --filter web exec playwright test --project=desktop e2e/app.spec.ts   # a subset
+```
+
+To run what CI runs before opening a pull request:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm format:check
+pnpm turbo run lint typecheck test build
+pnpm --filter web e2e
+```
+
+| Script    | Where         | What it does                                                              |
+| --------- | ------------- | ------------------------------------------------------------------------- |
+| `dev`     | `web`         | Vite dev server                                                           |
+| `build`   | every package | `web`: Vite build; `worker`: `wrangler deploy --dry-run`; packages: `tsc` |
+| `preview` | `web`         | Serve the last build                                                      |
+| `e2e`     | `web`         | Playwright and axe                                                        |
+| `dev`     | `worker`      | `wrangler dev` with the app's build                                       |
+| `deploy`  | `worker`      | `wrangler deploy` (run it as `pnpm --filter worker run deploy`)           |
 
 ## Deployment (Cloudflare Workers)
 
@@ -83,13 +176,41 @@ One Worker (`apps/worker`) serves the app's build and proxies TMDB:
 - adds metadata to every page's HTML in the browser's language: title, description, canonical URL, Open Graph and Twitter cards with artwork, and JSON-LD (`Movie`, `TVSeries`, `Person`);
 - serves `robots.txt` and `sitemap.xml` (main pages plus trending and popular titles and people, cached for a day).
 
+First deploy:
+
 ```bash
 pnpm --filter worker exec wrangler login
-pnpm --filter worker exec wrangler secret put TMDB_TOKEN   # the API Read Access Token
-pnpm build && pnpm --filter worker run deploy              # https://lumi.<subdomain>.workers.dev
+pnpm --filter worker exec wrangler whoami                  # the account to deploy to
+pnpm --filter worker exec wrangler secret put TMDB_TOKEN   # paste the API Read Access Token
+pnpm install --frozen-lockfile && pnpm build
+pnpm --filter worker run deploy                            # https://lumi.<subdomain>.workers.dev
 ```
 
-To run the Worker locally, put `TMDB_TOKEN=...` in `apps/worker/.dev.vars` (ignored by git), then `pnpm --filter worker dev`.
+Later deploys need only the last two lines; the secret stays. Before deploying under another name or subdomain, change `name` and `vars.SITE_URL` in `apps/worker/wrangler.jsonc`: `SITE_URL` is the canonical origin in the metadata, `robots.txt` and the sitemap.
+
+Check a deploy:
+
+```bash
+curl -sI https://lumi.<subdomain>.workers.dev/                 # 200, Vary: Accept-Language
+curl -s https://lumi.<subdomain>.workers.dev/api/tmdb/genre/movie/list | head -c 120
+curl -s https://lumi.<subdomain>.workers.dev/robots.txt
+pnpm --filter worker exec wrangler deployments list
+```
+
+## Troubleshooting
+
+| Symptom                                                               | Fix                                                                                                                |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `pnpm install` fails with an unsupported engine                       | Use Node.js 24: `nvm use`                                                                                          |
+| "Missing VITE_TMDB_ACCESS_TOKEN" on every page                        | Create `apps/web/.env` from `.env.example` and restart the dev server                                              |
+| TMDB answers 401                                                      | The value is the short API key or has expired; use the API Read Access Token                                       |
+| Vite or TypeScript cannot resolve `@lumi/tmdb-client` or `@lumi/i18n` | Run `pnpm build` once: the packages are imported from their build output                                           |
+| `vite preview` shows no data                                          | The production build has no token; build with `ALLOW_CLIENT_TOKEN=1`, or run the Worker                            |
+| The Worker answers 500 "TMDB_TOKEN is not configured"                 | Locally: `apps/worker/.dev.vars`; deployed: `wrangler secret put TMDB_TOKEN`                                       |
+| The Worker serves an old version of the app                           | `pnpm build` again before `pnpm --filter worker dev` or `run deploy`                                               |
+| Port 5173, 4173 or 8787 is taken                                      | `pnpm --filter web dev --port 5174`, `pnpm --filter worker dev --port 8788` (the browser tests need 4173)          |
+| The commit is rejected                                                | The hook enforces [Conventional Commits](https://www.conventionalcommits.org): `feat(web): …`, `fix(worker): …`, … |
+| The browser tests cannot find a browser                               | `pnpm --filter web exec playwright install chromium`, or set `CHROME_PATH`                                         |
 
 ## Design
 

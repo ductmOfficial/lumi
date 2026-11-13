@@ -22,5 +22,6 @@ test-results/
 .DS_Store
 *.log
 
-# Local-only Vietnamese progress notes
+# Local-only Vietnamese copies of the docs
 PROGRESS.vi.md
+README.vi.md
