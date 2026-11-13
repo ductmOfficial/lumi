@@ -103,6 +103,21 @@ test("deleting all data asks first", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Xoá tất cả" })).toBeFocused();
 });
 
+test.describe("a browser in English", () => {
+  test.use({ locale: "en-US" });
+
+  test("starts in English and keeps the language the user picks", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page.getByRole("link", { name: "My List" }).first()).toBeVisible();
+
+    await page.getByRole("button", { name: /Chuyển sang Tiếng Việt/ }).click();
+    await expect(page.locator("html")).toHaveAttribute("lang", "vi");
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("lang", "vi");
+  });
+});
+
 test("the header switches the language", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: /Chuyển sang English/ }).click();

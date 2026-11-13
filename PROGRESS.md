@@ -8,21 +8,22 @@ Lumi is a movie and series discovery app on the TMDB API. This repo was created 
 
 ## Steps
 
-| #   | Step                                                                              | Branch              | Status |
-| --- | --------------------------------------------------------------------------------- | ------------------- | ------ |
-| 1   | Repository from the `ductran-starter` template                                    | `main`              | ✅     |
-| 2   | Rename to `lumi`, drop the sample package and the local PostgreSQL                | `chore/setup`       | ✅     |
-| 3   | `@lumi/tmdb-client`: typed client, errors, images, series in the movie shape      | `feat/tmdb-client`  | ✅     |
-| 4   | Worker: TMDB proxy with edge cache and rate limit                                 | `feat/worker-proxy` | ✅     |
-| 5   | Web app: home feed, movie, series and people profiles, discover, search, library  | `feat/web`          | ✅     |
-| 6   | Movie quiz, compare, watch together, insights                                     | `feat/tools`        | ✅     |
-| 7   | Worker serves the app with link-preview metadata, robots and sitemap              | `feat/worker-site`  | ✅     |
-| 8   | Playwright and axe tests on a fake TMDB, `Browser` job in CI, accessibility fixes | `test/e2e`          | ✅     |
-| 9   | Sen UI tokens and components                                                      | `feat/sen-ui`       | ✅     |
-| 10  | README and this progress log                                                      | `docs/readme`       | ✅     |
-| 11  | Deploy the Worker `lumi` with the `TMDB_TOKEN` secret (lumi.tmduc.workers.dev)    | —                   | ✅     |
-| 12  | HEAD requests for pages get the same headers as GET                               | `fix/worker-head`   | ✅     |
-| 13  | Declare the workers.dev URL and turn off preview URLs                             | `chore/worker-urls` | ✅     |
+| #   | Step                                                                              | Branch                | Status |
+| --- | --------------------------------------------------------------------------------- | --------------------- | ------ |
+| 1   | Repository from the `ductran-starter` template                                    | `main`                | ✅     |
+| 2   | Rename to `lumi`, drop the sample package and the local PostgreSQL                | `chore/setup`         | ✅     |
+| 3   | `@lumi/tmdb-client`: typed client, errors, images, series in the movie shape      | `feat/tmdb-client`    | ✅     |
+| 4   | Worker: TMDB proxy with edge cache and rate limit                                 | `feat/worker-proxy`   | ✅     |
+| 5   | Web app: home feed, movie, series and people profiles, discover, search, library  | `feat/web`            | ✅     |
+| 6   | Movie quiz, compare, watch together, insights                                     | `feat/tools`          | ✅     |
+| 7   | Worker serves the app with link-preview metadata, robots and sitemap              | `feat/worker-site`    | ✅     |
+| 8   | Playwright and axe tests on a fake TMDB, `Browser` job in CI, accessibility fixes | `test/e2e`            | ✅     |
+| 9   | Sen UI tokens and components                                                      | `feat/sen-ui`         | ✅     |
+| 10  | README and this progress log                                                      | `docs/readme`         | ✅     |
+| 11  | Deploy the Worker `lumi` with the `TMDB_TOKEN` secret (lumi.tmduc.workers.dev)    | —                     | ✅     |
+| 12  | HEAD requests for pages get the same headers as GET                               | `fix/worker-head`     | ✅     |
+| 13  | Declare the workers.dev URL and turn off preview URLs                             | `chore/worker-urls`   | ✅     |
+| 14  | First visit in the browser's language, by the same rule as the Worker             | `feat/initial-locale` | ✅     |
 
 Each step is a pull request with green checks (`Browser` from step 8), merged with rebase.
 
@@ -53,3 +54,4 @@ Each step is a pull request with green checks (`Browser` from step 8), merged wi
 | axe: dot pagers smaller than 24 px, unnamed photo buttons, `aria-label` on a `<p>`, light-theme contrast, no `h1` on the 404 page | Larger hit areas around the same dots, labels, `role="img"`, darker light-theme accent, success and warning colors, a heading       |
 | React Aria deprecated `selectedKey` on `Select`                                                                                   | `value` and `onChange`                                                                                                              |
 | `HEAD /` skipped the Worker and came back without `Vary: Accept-Language`                                                         | The Worker renders the page for HEAD as for GET and returns the headers without the body                                            |
+| The interface always started in Vietnamese, while the Worker wrote link previews in the visitor's language                        | `localeFor` in `@lumi/i18n` picks the language for both; the app uses it until the user chooses one                                 |
