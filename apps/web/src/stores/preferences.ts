@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { ThemePreference } from "@/themes/registry";
 
-import type { Locale } from "@lumi/i18n";
+import { localeFor, type Locale } from "@lumi/i18n";
 
 export type { Locale };
 
@@ -37,10 +37,17 @@ export type RowLayoutChoice = "list" | "spotlight";
 /** localStorage key — public/theme-init.js reads this key too. */
 export const PREFERENCES_STORAGE_KEY = "lumi:preferences";
 
+/** The interface language the browser asks for: Vietnamese for Vietnamese, otherwise English. */
+function browserLocale(): Locale {
+  if (typeof navigator === "undefined") return "vi";
+  return localeFor(navigator.languages[0] ?? navigator.language);
+}
+
 export const usePreferences = create<PreferencesState>()(
   persist(
     (set) => ({
-      locale: "vi",
+      // first visit: the browser's language; afterwards the saved choice wins
+      locale: browserLocale(),
       region: "VN",
       theme: "system",
       setLocale: (locale) => set({ locale }),

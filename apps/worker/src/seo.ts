@@ -2,15 +2,16 @@
  * Server-side metadata for link previews (Open Graph / Twitter cards) and search engines.
  * Pure functions only — the Worker fetches TMDB data and injects the result with HTMLRewriter.
  */
-import { dictionaries, type Locale, type MessageKey } from "@lumi/i18n";
+import { dictionaries, localeFor, type Locale, type MessageKey } from "@lumi/i18n";
 import { slugify, TMDB_IMAGE_BASE as IMAGE_BASE } from "@lumi/tmdb-client";
 
 export type { Locale };
 
 export const SITE_NAME = "Lumi";
 
+/** The visitor's first preferred language decides, as in the app (see localeFor). */
 export function pickLocale(acceptLanguage: string | null): Locale {
-  return /^\s*vi\b/i.test(acceptLanguage ?? "") ? "vi" : "en";
+  return localeFor(acceptLanguage);
 }
 
 export const tmdbLanguage = (locale: Locale) => (locale === "vi" ? "vi-VN" : "en-US");
