@@ -52,19 +52,21 @@ Inside `apps/web/src`, each feature folder (`movies`, `tv`, `people`, `discover`
 | Tool                       | Version                    | Needed for                         | Install                                                                                            |
 | -------------------------- | -------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------- |
 | Node.js                    | 24 (`.nvmrc`)              | everything                         | `nvm install && nvm use` (or `fnm use`)                                                            |
-| pnpm                       | 12.14.0 (`packageManager`) | everything                         | `npm install -g pnpm@12.14.0` (or `corepack enable`)                                               |
+| pnpm                       | 12.14.0 (`packageManager`) | everything                         | `corepack enable` (or `npm install -g pnpm@12.14.0`)                                               |
 | Git                        | any recent                 | everything                         |                                                                                                    |
 | TMDB API Read Access Token | v4 token                   | running the app with real data     | Create a free account, then [themoviedb.org/settings/api](https://www.themoviedb.org/settings/api) |
 | Chromium or Google Chrome  | any recent                 | browser tests only                 | `pnpm --filter web exec playwright install chromium`, or point `CHROME_PATH` at Chrome             |
 | Cloudflare account         | free plan is enough        | running the Worker locally, deploy | [dash.cloudflare.com](https://dash.cloudflare.com/sign-up)                                         |
 
-`pnpm install` refuses other Node.js majors (`engineStrict`). The TMDB page shows two credentials: use the long **API Read Access Token** (it starts with `eyJ`), not the short API key.
+`pnpm install` refuses other Node.js majors (`engineStrict`). Corepack ships with Node.js 24: after `corepack enable`, the first `pnpm` command downloads the exact version from `packageManager` (answer `Y` if it asks). The TMDB page shows two credentials: use the long **API Read Access Token** (it starts with `eyJ`), not the short API key.
 
 ### 2. Clone and install
 
 ```bash
 git clone https://github.com/ductmOfficial/lumi.git
 cd lumi
+nvm use
+corepack enable
 pnpm install          # also installs the commit-msg hook
 ```
 
@@ -201,7 +203,8 @@ pnpm --filter worker exec wrangler deployments list
 
 | Symptom                                                               | Fix                                                                                                                |
 | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `pnpm install` fails with an unsupported engine                       | Use Node.js 24: `nvm use`                                                                                          |
+| `pnpm install` fails with `ERR_PNPM_UNSUPPORTED_ENGINE`               | Wrong Node.js major: `nvm use` (Node.js 24), then install again                                                    |
+| `pnpm: command not found`, or a different pnpm version runs           | `corepack enable`, then open a new terminal; `pnpm -v` should print `12.14.0`                                      |
 | "Missing VITE_TMDB_ACCESS_TOKEN" on every page                        | Create `apps/web/.env` from `.env.example` and restart the dev server                                              |
 | TMDB answers 401                                                      | The value is the short API key or has expired; use the API Read Access Token                                       |
 | Vite or TypeScript cannot resolve `@lumi/tmdb-client` or `@lumi/i18n` | Run `pnpm build` once: the packages are imported from their build output                                           |
@@ -211,6 +214,7 @@ pnpm --filter worker exec wrangler deployments list
 | Port 5173, 4173 or 8787 is taken                                      | `pnpm --filter web dev --port 5174`, `pnpm --filter worker dev --port 8788` (the browser tests need 4173)          |
 | The commit is rejected                                                | The hook enforces [Conventional Commits](https://www.conventionalcommits.org): `feat(web): …`, `fix(worker): …`, … |
 | The browser tests cannot find a browser                               | `pnpm --filter web exec playwright install chromium`, or set `CHROME_PATH`                                         |
+| A machine with little memory kills the run (exit code 137)            | Run fewer tasks at once: `pnpm turbo run lint typecheck test build --concurrency=2`                                |
 
 ## Design
 
