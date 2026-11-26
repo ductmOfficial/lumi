@@ -38,7 +38,7 @@ export function MoreActions({ movie }: { movie: MovieLite }) {
       onOpenChange={(v) => {
         if (!v) setView("menu");
       }}
-      triggerClassName="inline-flex h-full items-center rounded-lg bg-surface-2 px-3 py-2 text-sm font-semibold transition hover:bg-border"
+      triggerClassName="inline-flex h-full items-center rounded-lg bg-surface-2 px-2.5 py-2 sm:px-3 text-sm font-semibold transition hover:bg-border"
       trigger={() => <Ellipsis size={18} />}
     >
       {(close) =>

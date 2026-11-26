@@ -18,7 +18,7 @@ export function ReminderControl({ movie, date }: { movie: MovieLite; date: strin
   const toggle = useLibrary((s) => s.toggleReminder);
   const label = useReminderLabel();
   const cls = clsx(
-    "inline-flex h-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition sm:px-4",
+    "inline-flex h-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold transition sm:px-4",
     on ? "bg-accent/15 text-accent hover:bg-accent/25" : "bg-surface-2 hover:bg-border",
   );
 
