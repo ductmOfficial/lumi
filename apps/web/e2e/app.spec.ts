@@ -47,7 +47,10 @@ test("a series profile lists its seasons", async ({ page }) => {
 test("a person profile shows the career", async ({ page }) => {
   await page.goto("/person/5001");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.getByRole("link", { name: "Phim" }).last().click();
+  // the profile's Works tab, not the site navigation's "Phim" link
+  await page.getByRole("link", { name: /^Tác phẩm/ }).click();
+  await expect(page).toHaveURL(/\/person\/5001[^/]*\/movies$/);
+  await expect(page.getByRole("radiogroup", { name: "role" })).toBeVisible();
   await expect(page.getByText("Role 1").first()).toBeVisible();
 });
 
