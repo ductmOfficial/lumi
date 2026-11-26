@@ -68,11 +68,12 @@ export function MovieActions({ movie, variant = "round", className }: Props) {
   };
 
   if (variant === "labeled") {
-    const base =
-      "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition";
+    // Phones fit the whole row on one line from 390px: the icon-only buttons are narrower there,
+    // and the List button never shrinks below its label (the row wraps instead of cutting it).
+    const base = "inline-flex items-center rounded-lg py-2 text-sm font-semibold transition";
     return (
       <div className={clsx("flex flex-wrap gap-2", className)}>
-        <ActionTip {...tips.watchlist} className="min-w-0 flex-1 sm:flex-none">
+        <ActionTip {...tips.watchlist} className="flex-1 sm:flex-none">
           {(tip) => (
             <button
               type="button"
@@ -81,14 +82,14 @@ export function MovieActions({ movie, variant = "round", className }: Props) {
               aria-describedby={tip}
               className={clsx(
                 base,
-                "w-full min-w-0 justify-center",
+                "w-full justify-center gap-1.5 px-3 whitespace-nowrap sm:gap-2 sm:px-4",
                 inList
                   ? "bg-surface-2 text-fg hover:bg-border"
                   : "bg-accent text-accent-fg hover:opacity-90",
               )}
             >
               {inList ? <CheckIcon size={18} /> : <PlusIcon size={18} />}
-              <span className="truncate sm:hidden">
+              <span className="sm:hidden">
                 {inList ? t("actions.inWatchlist") : t("actions.addWatchlistShort")}
               </span>
               <span className="hidden sm:inline">
@@ -109,7 +110,7 @@ export function MovieActions({ movie, variant = "round", className }: Props) {
               aria-describedby={tip}
               className={clsx(
                 base,
-                "bg-surface-2 px-3 hover:bg-border sm:px-4",
+                "gap-2 bg-surface-2 px-2.5 hover:bg-border sm:px-4",
                 reaction === "like" && "text-accent",
               )}
             >
@@ -130,7 +131,7 @@ export function MovieActions({ movie, variant = "round", className }: Props) {
               aria-describedby={tip}
               className={clsx(
                 base,
-                "bg-surface-2 px-3 hover:bg-border",
+                "bg-surface-2 px-2.5 hover:bg-border sm:px-4",
                 reaction === "dislike" && "text-danger",
               )}
             >

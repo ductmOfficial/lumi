@@ -245,7 +245,7 @@ export function MovieProfilePage({ type = "movie" }: { type?: MediaType }) {
         }
         actions={
           // mobile: one row — the List button stretches, the others are icon-only
-          <div className="flex w-full gap-2 sm:w-auto sm:flex-wrap sm:justify-center">
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:justify-center">
             <MovieActions
               movie={{ ...movie, genre_ids: movie.genres.map((g) => g.id) }}
               variant="labeled"
@@ -264,7 +264,7 @@ export function MovieProfilePage({ type = "movie" }: { type?: MediaType }) {
                   playVideo(trailer);
                 }}
                 aria-label={t("movie.trailer")}
-                className="inline-flex items-center gap-2 rounded-lg bg-surface-2 px-3 py-2 text-sm font-semibold hover:bg-border sm:px-4"
+                className="inline-flex items-center gap-2 rounded-lg bg-surface-2 px-2.5 py-2 text-sm font-semibold hover:bg-border sm:px-4"
               >
                 <PlayIcon size={16} />{" "}
                 <span className="hidden sm:inline">{t("movie.trailer")}</span>

@@ -33,7 +33,7 @@ export function WatchedControl({ movie }: { movie: MovieLite }) {
       onOpenChange={onOpenChange}
       triggerLabel={entry ? t("lib.watched") : t("lib.markWatched")}
       triggerClassName={clsx(
-        "inline-flex h-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition sm:px-4",
+        "inline-flex h-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold transition sm:px-4",
         entry ? "bg-success/15 text-success hover:bg-success/25" : "bg-surface-2 hover:bg-border",
       )}
       trigger={() => (
