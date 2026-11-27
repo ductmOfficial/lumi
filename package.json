@@ -22,7 +22,7 @@
     "@repo/prettier-config": "workspace:*",
     "husky": "^9.1.7",
     "prettier": "^3.10.1",
-    "turbo": "^2.11.11",
+    "turbo": "^2.11.13",
     "typescript": "~6.0.3"
   },
   "prettier": "@repo/prettier-config",
